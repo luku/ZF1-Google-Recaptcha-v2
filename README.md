@@ -41,10 +41,28 @@ $this->addElement('captcha', 'captcha', array(
     'required' => true,
     'captcha' => array(
         'captcha' => 'ReCaptcha2',
-        'hl' => 'en', // english is set by deafult, this line is not required
+        'hl' => 'en', // browser's language by deafult, this line is not required
         'theme' => 'light', // see options below
         'pubkey' => 'Your public key goes here',
         'privkey' => 'Your private key goes here'
+    )
+));
+```
+
+To include paths directly, you can use: 
+
+```php
+$captcha = new Zend_Form_Element_Captcha('captcha', array(
+    'label' => 'Please solve Captcha puzzle:',
+    'prefixPath' => array(
+        array('prefix' => 'Ghost', 'path' => 'Ghost'),
+        Zend_Form::DECORATOR => array('prefix' => 'Ghost_Form_Decorator', 'path' => 'Ghost/Form/Decorator'),
+    ),
+    'captcha' => array(
+        'captcha' => 'ReCaptcha2',
+        'pubkey' => 'Your public key goes here',
+        'privkey' => 'Your private key goes here'
+        'theme' => 'light', // see options below
     )
 ));
 ```
@@ -61,9 +79,9 @@ Parameters are published inside 'script' tag, while the attributes referes to 'd
  * @var array
  */
 protected $_params = array(
-    'onload' => null,
+    'onload' => '',
     'render' => 'onload',
-    'hl'     => 'en'
+    'hl'     => ''
 );
     
 /**
@@ -76,8 +94,8 @@ protected $_attributes = array(
     'theme'            => 'light',
     'type'             => 'image',
     'tabindex'         => 0,
-    'callback'         => null,
-    'expired-callback' => null
+    'callback'         => '',
+    'expired-callback' => ''
 );
 ```
 All attributes are rendered with htmlentities() function.

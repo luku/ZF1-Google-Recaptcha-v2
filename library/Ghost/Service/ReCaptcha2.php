@@ -50,9 +50,9 @@ class Ghost_Service_ReCaptcha2 extends Zend_Service_Abstract
      * @var array
      */
     protected $_params = array(
-        'onload' => null,
+        'onload' => '',
         'render' => 'onload',
-        'hl'     => 'en'
+        'hl'     => '' // by default browser's locale
     );
     
     /**
@@ -65,8 +65,8 @@ class Ghost_Service_ReCaptcha2 extends Zend_Service_Abstract
         'theme'            => 'light',
         'type'             => 'image',
         'tabindex'         => 0,
-        'callback'         => null,
-        'expired-callback' => null
+        'callback'         => '',
+        'expired-callback' => ''
     );
 
 
@@ -331,14 +331,14 @@ class Ghost_Service_ReCaptcha2 extends Zend_Service_Abstract
     {
         $host = self::API_SECURE_SERVER;
 
-        $langPart = '?hl=en';
-        if (!empty($this->_params['hl'])) {
-            $langPart = '?hl=' . urlencode($this->getParam('hl'));
+        $renderPart = '?render=onload';
+        if (!empty($this->_params['render'])) {
+            $renderPart = '?render=' . urlencode($this->getParam('render'));
         }
         
-        $renderPart = '&render=onload';
-        if (!empty($this->_params['render'])) {
-            $renderPart = '&render=' . urlencode($this->getParam('render'));
+        $langPart = '';
+        if (!empty($this->_params['hl'])) {
+            $langPart = '&hl=' . urlencode($this->getParam('hl'));
         }
         
         $onloadPart = '';
@@ -348,7 +348,7 @@ class Ghost_Service_ReCaptcha2 extends Zend_Service_Abstract
         
         $return = <<<HTML
 <script type="text/javascript"
-   src="{$host}.js{$langPart}{$renderPart}{$onloadPart}" async="async" defer="defer">
+   src="{$host}.js{$renderPart}{$langPart}{$onloadPart}" async="async" defer="defer">
 </script>
 HTML;
         return $return;
@@ -425,10 +425,6 @@ HTML;
     {
         if ($this->_privateKey === null) {
             throw new Ghost_Service_ReCaptcha2_Exception('Missing private key');
-        }
-
-        if ($this->_ip === null) {
-            throw new Ghost_Service_ReCaptcha2_Exception('Missing ip address');
         }
 
         /* Fetch an instance of the http client */
